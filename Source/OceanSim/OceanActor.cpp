@@ -2,7 +2,8 @@
 
 AOceanActor::AOceanActor()
 {
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bStartWithTickEnabled = true;
 
 	Mesh = CreateDefaultSubobject<UProceduralMeshComponent>(TEXT("Ocean Mesh"));
 	RootComponent = Mesh;
@@ -14,20 +15,44 @@ void AOceanActor::BeginPlay()
 	GenerateMesh();
 }
 
+void AOceanActor::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	if (OceanParams != PrevOceanParams)
+	{
+		UpdateMaterialParams();
+	}
+}
+
+void AOceanActor::UpdateMaterialParams()
+{
+	DynamicMat->SetScalarParameterValue("Amplitude", OceanParams.Amplitude);
+	DynamicMat->SetScalarParameterValue("Frequency", OceanParams.Frequency);
+	DynamicMat->SetScalarParameterValue("AmplitudeMultiplier", OceanParams.AmplitudeMultiplier);
+	DynamicMat->SetScalarParameterValue("FrequencyMultiplier", OceanParams.FrequencyMultiplier);
+	DynamicMat->SetScalarParameterValue("NumOfWaves", (float)OceanParams.NumOfWaves);
+	DynamicMat->SetVectorParameterValue("WaterColor", OceanParams.WaterColor);
+
+	PrevOceanParams = OceanParams;
+}
+
 void AOceanActor::GenerateMesh()
 {
 	TArray<FVector> Vertices;
 	TArray<int32> Triangles;
-	TArray<FVector> Normals;
 	TArray<FVector2D> UVs;
-	TArray<FProcMeshTangent> Tangents;
+
+	// These three will be recalculated in the material every frame
+	TArray<FVector> EmptyNormals;
+	TArray<FProcMeshTangent> EmptyTangents;
 	TArray<FColor> EmptyColors;
 
-	const int32 NumVertsX = GridSizeX + 1;
-	const int32 NumVertsY = GridSizeY + 1;
+	const int32 NumVertsX = GridSize;
+	const int32 NumVertsY = GridSize;
 
-	float TotalSizeX = GridSizeX * QuadSize;
-	float TotalSizeY = GridSizeY * QuadSize;
+	float TotalSizeX = GridSize * QuadSize;
+	float TotalSizeY = GridSize * QuadSize;
 
 	float HalfSizeX = TotalSizeX * 0.5f;
 	float HalfSizeY = TotalSizeY * 0.5f;
@@ -42,18 +67,15 @@ void AOceanActor::GenerateMesh()
 			Vertices.Add(FVector(XPos, YPos, 0.f));
 
 			UVs.Add(FVector2D(
-				(float)x / GridSizeX,
-				(float)y / GridSizeY
+				(float)x / GridSize,
+				(float)y / GridSize
 			));
-
-			Normals.Add(FVector::UpVector);
-			Tangents.Add(FProcMeshTangent(1.f, 0.f, 0.f));
 		}
 	}
 
-	for (int32 y = 0; y < GridSizeY; y++)
+	for (int32 y = 0; y < GridSize; y++)
 	{
-		for (int32 x = 0; x < GridSizeX; x++)
+		for (int32 x = 0; x < GridSize; x++)
 		{
 			int32 i0 = y * NumVertsX + x;
 			int32 i1 = i0 + 1;
@@ -76,13 +98,23 @@ void AOceanActor::GenerateMesh()
 		SectionIndex,
 		Vertices,
 		Triangles,
-		Normals,
+		EmptyNormals,
 		UVs,
 		EmptyColors,
-		Tangents,
+		EmptyTangents,
 		bCreateCollision
 	);
 
 	if (OceanMat)
-		Mesh->SetMaterial(0, OceanMat);
+	{
+		DynamicMat = UMaterialInstanceDynamic::Create(OceanMat, this);
+		Mesh->SetMaterial(0, DynamicMat);
+
+		// need to wait a frame or so before attempting to update the material params
+		FTimerHandle Handle;
+		GetWorld()->GetTimerManager().SetTimer(Handle, [this]()
+		{
+			UpdateMaterialParams();
+		}, 0.1f, false);
+	}
 }

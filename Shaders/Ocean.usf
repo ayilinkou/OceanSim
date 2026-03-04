@@ -1,0 +1,52 @@
+struct WaveStruct
+{
+	float Amp;
+	float Freq;
+	float AmpMul;
+	float FreqMul;
+	float Time;
+	float2 PosXY;
+	int NumOfWaves;
+	
+	void LoadStruct(float amp, float freq, float ampMul, float freqMul, float time, float2 posXY, int numOfWaves)
+	{
+		Amp = amp;
+		Freq = freq;
+		AmpMul = ampMul;
+		FreqMul = freqMul;
+		Time = time;
+		PosXY = posXY;
+		NumOfWaves = numOfWaves;
+	}
+	
+	float4 Wave(float CurrentFreq, float CurrentAmp)
+	{
+		float s = sin(CurrentFreq * (PosXY.x) + Time);
+		float HeightOffset = CurrentAmp * s;
+		
+		float3 Normal = float3(0.f, 0.f, 1.f);
+		return float4(Normal, HeightOffset);
+	}
+	
+	float4 SumOfWaves()
+	{
+		float4 Sum = float4(0.f, 0.f, 0.f, 0.f);
+		float CurrentAmp = Amp;
+		float CurrentFreq = Freq;
+
+		for (int i = 0; i < NumOfWaves; i++)
+		{
+			Sum += Wave(CurrentFreq, CurrentAmp);
+
+			CurrentFreq *= FreqMul;
+			CurrentAmp *= AmpMul;
+		}
+
+		float3 Normal = normalize(Sum.xyz);
+		float HeightOffset = Sum.w;
+		return float4(Normal, HeightOffset);
+	}
+};
+
+WaveStruct Struct;
+Struct.LoadStruct(Amplitude, Frequency, AmplitudeMultiplier, FrequencyMultiplier, Time, PosXY, (int)NumOfWaves);

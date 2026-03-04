@@ -37,6 +37,6 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Ocean", meta = (ClampMin = "1"))
 	int32 GridSize = 256;
-	UPROPERTY(EditAnywhere, Category = "Ocean", meta = (ClampMin = "1"))
+	UPROPERTY(EditAnywhere, Category = "Ocean", meta = (ClampMin = "1.0"))
 	float QuadSize = 100.f;
 };

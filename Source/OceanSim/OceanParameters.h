@@ -16,11 +16,11 @@ struct FOceanParameters
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Base Parameters", meta = (ClampMin = "0.01"))
 	float Frequency = 1.f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Fractal Controls", meta = (ClampMin = "0"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Fractal Controls", meta = (ClampMin = "1"))
 	int32 NumOfWaves = 8;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Fractal Controls", meta = (ClampMin = "0.01", ClampMax = "1.0"))
 	float AmplitudeMultiplier = 0.82f;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Fractal Controls", meta = (ClampMin = "0.01"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Fractal Controls", meta = (ClampMin = "1.0"))
 	float FrequencyMultiplier = 1.18f;
 
 	bool operator==(const FOceanParameters& Other) const

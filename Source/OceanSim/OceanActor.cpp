@@ -67,15 +67,15 @@ void AOceanActor::GenerateMesh()
 			Vertices.Add(FVector(XPos, YPos, 0.f));
 
 			UVs.Add(FVector2D(
-				(float)x / GridSize,
-				(float)y / GridSize
+				(float)x / (NumVertsX - 1),
+				(float)y / (NumVertsY - 1)
 			));
 		}
 	}
 
-	for (int32 y = 0; y < GridSize; y++)
+	for (int32 y = 0; y < NumVertsY - 1; y++)
 	{
-		for (int32 x = 0; x < GridSize; x++)
+		for (int32 x = 0; x < NumVertsX - 1; x++)
 		{
 			int32 i0 = y * NumVertsX + x;
 			int32 i1 = i0 + 1;

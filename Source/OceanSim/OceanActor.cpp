@@ -32,6 +32,7 @@ void AOceanActor::UpdateMaterialParams()
 	DynamicMat->SetScalarParameterValue("AmplitudeMultiplier", OceanParams.AmplitudeMultiplier);
 	DynamicMat->SetScalarParameterValue("FrequencyMultiplier", OceanParams.FrequencyMultiplier);
 	DynamicMat->SetScalarParameterValue("NumOfWaves", (float)OceanParams.NumOfWaves);
+	DynamicMat->SetScalarParameterValue("Seed", (float)OceanParams.Seed);
 	DynamicMat->SetVectorParameterValue("WaterColor", OceanParams.WaterColor);
 
 	PrevOceanParams = OceanParams;

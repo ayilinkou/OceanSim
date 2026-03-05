@@ -1,3 +1,6 @@
+#define PI 3.14159265f
+#define TWO_PI 6.28318531f
+
 struct WaveStruct
 {
 	float Amp;
@@ -6,9 +9,10 @@ struct WaveStruct
 	float FreqMul;
 	float Time;
 	float2 PosXY;
-	int NumOfWaves;
+	uint NumOfWaves;
+	uint Seed;
 	
-	void LoadStruct(float amp, float freq, float ampMul, float freqMul, float time, float2 posXY, int numOfWaves)
+	void LoadStruct(float amp, float freq, float ampMul, float freqMul, float time, float2 posXY, int numOfWaves, int seed)
 	{
 		Amp = amp;
 		Freq = freq;
@@ -17,22 +21,36 @@ struct WaveStruct
 		Time = time;
 		PosXY = posXY;
 		NumOfWaves = numOfWaves;
+		Seed = seed;
 	}
 	
-	float4 Wave(float CurrentFreq, float CurrentAmp)
+	float RandomFloat(uint x)
 	{
-		const float2 Dir = normalize(float2(1.f, 1.f));
+		x ^= x >> 16;
+		x *= 0x7feb352d;
+		x ^= x >> 15;
+		x *= 0x846ca68b;
+		x ^= x >> 16;
+		return (float)x / 4294967296.0;
+	}
+	
+	float4 Wave(float CurrentFreq, float CurrentAmp, uint Octave)
+	{
+		const float Rand = RandomFloat(Seed + Octave * 17u);
+		const float Angle = Rand * TWO_PI;
+		const float2 Dir = float2(cos(Angle), sin(Angle));
 		
-		float theta = CurrentFreq * dot(Dir, PosXY) + Time;
-		float s = sin(theta);
-		float c = cos(theta);
+		const float Phase = RandomFloat(Seed + Octave * 101u) * TWO_PI;
+		const float Theta = CurrentFreq * dot(Dir, PosXY) + Time + Phase;
+		const float s = sin(Theta);
+		const float c = cos(Theta);
 		
-		float HeightOffset = CurrentAmp * s;
+		const float HeightOffset = CurrentAmp * s;
 		
-		float dx = CurrentAmp * CurrentFreq * Dir.x * c;
-		float dy = CurrentAmp * CurrentFreq * Dir.y * c;
+		const float dx = CurrentAmp * CurrentFreq * Dir.x * c;
+		const float dy = CurrentAmp * CurrentFreq * Dir.y * c;
 		
-		float3 Normal = float3(-dx, -dy, 1.f);
+		const float3 Normal = float3(-dx, -dy, 1.f);
 		return float4(Normal, HeightOffset);
 	}
 	
@@ -42,23 +60,23 @@ struct WaveStruct
 		float CurrentAmp = Amp;
 		float CurrentFreq = Freq;
 
-		for (int i = 0; i < NumOfWaves; i++)
+		for (uint Octave = 0u; Octave < NumOfWaves; Octave++)
 		{
-			Sum += Wave(CurrentFreq, CurrentAmp);
+			Sum += Wave(CurrentFreq, CurrentAmp, Octave);
 
 			CurrentFreq *= FreqMul;
 			CurrentAmp *= AmpMul;
 		}
 
-		float3 WorldNormal = normalize(Sum.xyz);
+		const float3 WorldNormal = normalize(Sum.xyz);
 		
 		// Unreal's material system expects the normal to be in tangent space
 		// TBN basis vectors
-		float3 T = float3(1.f, 0.f, 0.f);
-		float3 B = float3(0.f, 1.f, 0.f);
-		float3 N = float3(0.f, 0.f, 1.f);
+		const float3 T = float3(1.f, 0.f, 0.f);
+		const float3 B = float3(0.f, 1.f, 0.f);
+		const float3 N = float3(0.f, 0.f, 1.f);
 		
-		float3 TangentNormal = float3(
+		const float3 TangentNormal = float3(
 			  dot(WorldNormal, T),
 			  dot(WorldNormal, B),
 			  dot(WorldNormal, N)
@@ -66,12 +84,12 @@ struct WaveStruct
 		
 		// Remap from [-1, 1] to [0, 1] for storage as a normal map colour
 		// Unreal will unpack it
-		float3 PackedNormal = TangentNormal * 0.5f + 0.5f;
+		const float3 PackedNormal = TangentNormal * 0.5f + 0.5f;
 		
-		float HeightOffset = Sum.w;
+		const float HeightOffset = Sum.w;
 		return float4(PackedNormal, HeightOffset);
 	}
 };
 
 WaveStruct Struct;
-Struct.LoadStruct(Amplitude, Frequency, AmplitudeMultiplier, FrequencyMultiplier, Time, PosXY, (int)NumOfWaves);
+Struct.LoadStruct(Amplitude, Frequency, AmplitudeMultiplier, FrequencyMultiplier, Time, PosXY, (int)NumOfWaves, Seed);

@@ -15,6 +15,8 @@ struct FOceanParameters
 	float Amplitude = 100.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Base Parameters", meta = (ClampMin = "0.0001"))
 	float Frequency = 1.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Base Parameters", meta = (ClampMin = "1"))
+	int32 Seed = 1;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Fractal Controls", meta = (ClampMin = "1"))
 	int32 NumOfWaves = 8;
@@ -30,6 +32,7 @@ struct FOceanParameters
 			&& FMath::IsNearlyEqual(Other.AmplitudeMultiplier, AmplitudeMultiplier)
 			&& FMath::IsNearlyEqual(Other.FrequencyMultiplier, FrequencyMultiplier)
 			&& NumOfWaves == Other.NumOfWaves
+			&& Seed == Other.Seed
 			&& WaterColor.Equals(Other.WaterColor, KINDA_SMALL_NUMBER);
 	}
 };

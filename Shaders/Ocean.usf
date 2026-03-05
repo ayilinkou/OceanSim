@@ -69,25 +69,8 @@ struct WaveStruct
 		}
 
 		const float3 WorldNormal = normalize(Sum.xyz);
-		
-		// Unreal's material system expects the normal to be in tangent space
-		// TBN basis vectors
-		const float3 T = float3(1.f, 0.f, 0.f);
-		const float3 B = float3(0.f, 1.f, 0.f);
-		const float3 N = float3(0.f, 0.f, 1.f);
-		
-		const float3 TangentNormal = float3(
-			  dot(WorldNormal, T),
-			  dot(WorldNormal, B),
-			  dot(WorldNormal, N)
-		);
-		
-		// Remap from [-1, 1] to [0, 1] for storage as a normal map colour
-		// Unreal will unpack it
-		const float3 PackedNormal = TangentNormal * 0.5f + 0.5f;
-		
 		const float HeightOffset = Sum.w;
-		return float4(PackedNormal, HeightOffset);
+		return float4(WorldNormal, HeightOffset);
 	}
 };
 

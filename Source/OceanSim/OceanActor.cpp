@@ -42,10 +42,9 @@ void AOceanActor::GenerateMesh()
 	TArray<FVector> Vertices;
 	TArray<int32> Triangles;
 	TArray<FVector2D> UVs;
+	TArray<FVector> Normals;
+	TArray<FProcMeshTangent> Tangents;
 
-	// These three will be recalculated in the material every frame
-	TArray<FVector> EmptyNormals;
-	TArray<FProcMeshTangent> EmptyTangents;
 	TArray<FColor> EmptyColors;
 
 	const int32 NumVertsX = GridSize;
@@ -70,6 +69,9 @@ void AOceanActor::GenerateMesh()
 				(float)x / (NumVertsX - 1),
 				(float)y / (NumVertsY - 1)
 			));
+
+			Normals.Add(FVector::UpVector);
+			Tangents.Add(FProcMeshTangent(1.f, 0.f, 0.f));
 		}
 	}
 
@@ -98,10 +100,10 @@ void AOceanActor::GenerateMesh()
 		SectionIndex,
 		Vertices,
 		Triangles,
-		EmptyNormals,
+		Normals,
 		UVs,
 		EmptyColors,
-		EmptyTangents,
+		Tangents,
 		bCreateCollision
 	);
 

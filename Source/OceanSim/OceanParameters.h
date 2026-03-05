@@ -13,7 +13,7 @@ struct FOceanParameters
 	FLinearColor WaterColor = FLinearColor(0.f, 0.5f, 1.f, 1.f);
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Base Parameters", meta = (ClampMin = "0.01"))
 	float Amplitude = 100.f;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Base Parameters", meta = (ClampMin = "0.01"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Base Parameters", meta = (ClampMin = "0.0001"))
 	float Frequency = 1.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Fractal Controls", meta = (ClampMin = "1"))

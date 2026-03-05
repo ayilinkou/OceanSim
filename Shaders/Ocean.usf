@@ -21,10 +21,18 @@ struct WaveStruct
 	
 	float4 Wave(float CurrentFreq, float CurrentAmp)
 	{
-		float s = sin(CurrentFreq * (PosXY.x) + Time);
+		const float2 Dir = normalize(float2(1.f, 1.f));
+		
+		float theta = CurrentFreq * dot(Dir, PosXY) + Time;
+		float s = sin(theta);
+		float c = cos(theta);
+		
 		float HeightOffset = CurrentAmp * s;
 		
-		float3 Normal = float3(0.f, 0.f, 1.f);
+		float dx = CurrentAmp * CurrentFreq * Dir.x * c;
+		float dy = CurrentAmp * CurrentFreq * Dir.y * c;
+		
+		float3 Normal = float3(-dx, -dy, 1.f);
 		return float4(Normal, HeightOffset);
 	}
 	
@@ -42,9 +50,26 @@ struct WaveStruct
 			CurrentAmp *= AmpMul;
 		}
 
-		float3 Normal = normalize(Sum.xyz);
+		float3 WorldNormal = normalize(Sum.xyz);
+		
+		// Unreal's material system expects the normal to be in tangent space
+		// TBN basis vectors
+		float3 T = float3(1.f, 0.f, 0.f);
+		float3 B = float3(0.f, 1.f, 0.f);
+		float3 N = float3(0.f, 0.f, 1.f);
+		
+		float3 TangentNormal = float3(
+			  dot(WorldNormal, T),
+			  dot(WorldNormal, B),
+			  dot(WorldNormal, N)
+		);
+		
+		// Remap from [-1, 1] to [0, 1] for storage as a normal map colour
+		// Unreal will unpack it
+		float3 PackedNormal = TangentNormal * 0.5f + 0.5f;
+		
 		float HeightOffset = Sum.w;
-		return float4(Normal, HeightOffset);
+		return float4(PackedNormal, HeightOffset);
 	}
 };
 

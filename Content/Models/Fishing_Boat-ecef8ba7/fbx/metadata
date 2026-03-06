@@ -1,0 +1,102 @@
+{
+	"assetNamespace": "fab",
+	"listing":
+	{
+		"averageRating": 5,
+		"createdAt": "",
+		"description": "<p>this is a model of a fishing trawler boat.</p>\n<p>feel free to comment where its used as i like to see my model in action and also favourite if you can :)</p>",
+		"isAiForbidden": false,
+		"isAiGenerated": false,
+		"lastUpdatedAt": "",
+		"listingType": "3d-model",
+		"media": "https://media.fab.com/image_previews/gallery_images/c85fe2a3-c9b4-4a88-9777-24f7b239688d/70ee9190-1de6-48af-b516-36376d9fef2a.jpeg",
+		"publishedAt": "2025-03-28T18:16:24.802897Z",
+		"reviewCount": 3,
+		"thumbnail": "https://media.fab.com/image_previews/gallery_images/2a32be1e-0d34-4806-99a4-1c7ff21ddcf3/ae6e3034-9108-4d69-b12b-b1a413c9cf52.jpeg",
+		"title": "Fishing Boat",
+		"uid": "ecef8ba7-5115-4b72-a908-2c088caaca9b",
+		"updatedAt": "",
+		"user":
+		{
+			"coverImageUrl": "",
+			"profileImageUrl": "https://cdn1.epicgames.com/fab/seller/o-xth95l3uwqx5yf2p7ey4yfzuqs3mu2/profileImage/blob-500x500-19118462eb9491eb1e7239f1bd74cf3f.jpg",
+			"sellerName": "Charlie catling",
+			"uid": "93c3821e-206d-4b1a-aacc-f4c3deee5e65"
+		},
+		"tags": [
+			{
+				"name": "Vehicle",
+				"slug": "vehicle",
+				"uid": "08971b1b-8ab3-4de7-8500-b9b3e00382cb"
+			},
+			{
+				"name": "Blender",
+				"slug": "blender",
+				"uid": "141666cf-0a09-4718-85fa-f0d54884a525"
+			},
+			{
+				"name": "Boat",
+				"slug": "boat",
+				"uid": "a2002f10-6a14-4112-9db0-a3f1a37f1c8f"
+			},
+			{
+				"name": "Fishing",
+				"slug": "fishing",
+				"uid": "c349f41d-dd49-45c1-ac4c-8de2df546571"
+			}
+		],
+		"category":
+		{
+			"name": "Vehicles & Transportation",
+			"path": "vehicles-transportation",
+			"slug": "vehicles-transportation",
+			"uid": "0bb33d40-c52f-4f88-86df-eeff7fcf7ba9"
+		},
+		"assetFormats": [
+			{
+				"assetFormatType":
+				{
+					"name": "FBX",
+					"groupName": "3D Exchange Formats",
+					"code": "fbx",
+					"icon": "cube",
+					"extensions": [
+						"fbx"
+					]
+				}
+			},
+			{
+				"assetFormatType":
+				{
+					"name": "Converted Files",
+					"groupName": "",
+					"code": "converted-files",
+					"icon": "cube",
+					"extensions": [
+						"gltf",
+						"glb",
+						"usdz"
+					]
+				}
+			}
+		],
+		"_PluginMetas":
+		{
+			"apiDataVersion": "0.0.1",
+			"entitlementUid": "",
+			"cacheSize": 0,
+			"downloaded": []
+		}
+	},
+	"target": "",
+	"quality": "",
+	"format": "fbx",
+	"fileId": "ae62fc5e-a102-4db1-89bd-afbef1a889fd",
+	"platformIncluded": "",
+	"distributionPointBaseUrls": [],
+	"distributionMethod": "",
+	"entitlementUid": "",
+	"invertedNormal": false,
+	"isConverted": false,
+	"isQuixel": false
+}

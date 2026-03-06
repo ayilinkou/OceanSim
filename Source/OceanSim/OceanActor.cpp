@@ -2,10 +2,11 @@
 
 AOceanActor::AOceanActor()
 {
-	PrimaryActorTick.bCanEverTick = true;
-	PrimaryActorTick.bStartWithTickEnabled = true;
+	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bStartWithTickEnabled = false;
 
 	Mesh = CreateDefaultSubobject<UProceduralMeshComponent>(TEXT("Ocean Mesh"));
+	Mesh->bNeverNeedsRenderUpdate = true;
 	RootComponent = Mesh;
 }
 
@@ -15,15 +16,16 @@ void AOceanActor::BeginPlay()
 	GenerateMesh();
 }
 
-void AOceanActor::Tick(float DeltaTime)
+#if WITH_EDITOR
+void AOceanActor::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
 {
-	Super::Tick(DeltaTime);
-
-	if (OceanParams != PrevOceanParams)
+	Super::PostEditChangeProperty(PropertyChangedEvent);
+	if (DynamicMat && OceanParams != PrevOceanParams)
 	{
 		UpdateMaterialParams();
 	}
 }
+#endif
 
 void AOceanActor::UpdateMaterialParams()
 {

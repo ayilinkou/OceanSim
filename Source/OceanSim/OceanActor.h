@@ -17,7 +17,10 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-	virtual void Tick(float DeltaTime) override;
+
+#if WITH_EDITOR
+	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
+#endif
 
 private:
 	void GenerateMesh();
@@ -25,11 +28,11 @@ private:
 
 public:
 	UPROPERTY(EditAnywhere, Category = "Ocean")
-	UProceduralMeshComponent* Mesh;
+	UProceduralMeshComponent* Mesh = nullptr;
 	UPROPERTY(EditAnywhere, Category = "Ocean")
-	UMaterialInterface* OceanMat;
+	UMaterialInterface* OceanMat = nullptr;
 	UPROPERTY(BlueprintReadOnly, Category = "Ocean")
-	UMaterialInstanceDynamic* DynamicMat;
+	UMaterialInstanceDynamic* DynamicMat = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ocean")
 	FOceanParameters OceanParams;

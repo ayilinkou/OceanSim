@@ -34,7 +34,7 @@ struct WaveStruct
 		return (float)x / 4294967296.0;
 	}
 	
-	float4 Wave(float CurrentFreq, float CurrentAmp, uint Octave)
+	float Wave(float CurrentFreq, float CurrentAmp, uint Octave, inout float2 Derivative)
 	{
 		const float Rand = RandomFloat(Seed + Octave * 17u);
 		const float Angle = Rand * TWO_PI;
@@ -50,26 +50,27 @@ struct WaveStruct
 		const float dx = CurrentAmp * CurrentFreq * Dir.x * c;
 		const float dy = CurrentAmp * CurrentFreq * Dir.y * c;
 		
-		const float3 Normal = float3(-dx, -dy, 1.f);
-		return float4(Normal, HeightOffset);
+		Derivative += float2(dx, dy);
+		
+		return HeightOffset;
 	}
 	
 	float4 SumOfWaves()
 	{
-		float4 Sum = float4(0.f, 0.f, 0.f, 0.f);
+		float HeightOffset = 0.f;
 		float CurrentAmp = Amp;
 		float CurrentFreq = Freq;
+		float2 Derivative = float2(0.f, 0.f);
 
 		for (uint Octave = 0u; Octave < NumOfWaves; Octave++)
 		{
-			Sum += Wave(CurrentFreq, CurrentAmp, Octave);
+			HeightOffset += Wave(CurrentFreq, CurrentAmp, Octave, Derivative);
 
 			CurrentFreq *= FreqMul;
 			CurrentAmp *= AmpMul;
 		}
 
-		const float3 WorldNormal = normalize(Sum.xyz);
-		const float HeightOffset = Sum.w;
+		const float3 WorldNormal = normalize(float3(-Derivative.x, -Derivative.y, 1.f));
 		return float4(WorldNormal, HeightOffset);
 	}
 };

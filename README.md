@@ -2,7 +2,11 @@
 
 An ocean simulation using the sum of sines technique from GPU Gems Chapter 1. Features a post process distance fog with height attenuation, as well as a post process effect for rain drops dripping down a camera lens. Implemented in Unreal Engine 5 using HLSL code and the material editor.
 
-# Video
+![Dawn image](Screenshots/Dawn.png)
+![Night image](Screenshots/Night.png)
+![Rain post process image](Screenshots/Rain.gif)
+
+## Video
 https://youtu.be/arJvuOTJWZc
 
 ## Resources
